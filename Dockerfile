@@ -10,6 +10,6 @@ COPY . .
 
 EXPOSE 3000
 
-RUN npm run migrate
+RUN npm run build
 
 CMD npm install && nodemon server.js

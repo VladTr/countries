@@ -1,8 +1,14 @@
-# Docker Node MongoDB Example
+## Install
 
-> Simple example of a dockerized Node/Mongo app
+1. Clone the project
+2. Run `npm i` in the project folder
 
-## Quick Start
+## Usage
+1. Run `npm run build`
+2. Run `node server`
+
+
+
 
 ```bash
 # Run in Docker
