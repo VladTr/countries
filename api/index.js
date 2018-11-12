@@ -17,7 +17,7 @@ router.get('/countries', async(req, res, next) => {
             name: "Вася",
             id: 45
           };
-        return res.send(myFunc + '(' + JSON.stringify(user) + ')');
+        return res.send(myFunc + '(' + JSON.stringify([user]) + ')');
       }
       
     
