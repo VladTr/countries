@@ -4,10 +4,7 @@
 2. Run `npm i` in the project folder
 
 ## Usage
-1. Run `npm run build`
-2. Run `node server`
-
-
+1. Run `node server`
 
 
 ```bash

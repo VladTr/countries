@@ -1,8 +1,9 @@
 var App = {
   storage: {
     countries: [],
-    countryId: ''
+    countryId: ""
   },
+
   init: function () {
     var divApp = document.getElementById("app");
     var button = document.createElement("input");
@@ -35,22 +36,22 @@ var App = {
 
   },
 
-  scriptRequest: function (url /*, onSuccess, onError*/ ) {
+  scriptRequest: function (url) {
     var scriptOk = false;
 
-    var callbackName = 'myFunc';
+    var callbackName = "myFunc";
 
     url += ~url.indexOf('?') ? '&' : '?';
-    url += 'callback=App.' + callbackName;
+    url += "callback=App." + callbackName;
 
     function checkCallback() {
-      if (scriptOk) return; 
+      if (scriptOk) return;
     }
 
-    const script = document.createElement('script');
+    const script = document.createElement("script");
 
     script.onreadystatechange = function () {
-      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+      if (this.readyState == "complete" || this.readyState == "loaded") {
         this.onreadystatechange = null;
         setTimeout(checkCallback, 0);
       }
@@ -67,7 +68,7 @@ var App = {
     selectList.id = "countriesSelect";
     selectList.onchange = listener;
 
-    elements.forEach(function(element) {
+    elements.forEach(function (element) {
       const option = document.createElement("option");
       option.value = element.id;
       option.text = element.name;

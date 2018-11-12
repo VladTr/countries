@@ -1,8 +1,8 @@
 "use strict";
-const models = require('../models');
+const models = require("../models");
 
 module.exports = (sequelize, DataTypes) => {
-  const Country = sequelize.define('Country', {
+  const Country = sequelize.define("Country", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     alive: DataTypes.BOOLEAN
   }, {});
 
-  Country.associate = function(models) {
+  Country.associate = function (models) {
     // associations can be defined here
   };
 
