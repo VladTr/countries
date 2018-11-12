@@ -137,8 +137,6 @@ var App = {
   createLoader: function () {
     var loader = document.createElement("div");
   
-console.log(window.navigator.userAgent, window.navigator.userAgent.indexOf("Chrome")===-1);
-
     if (   (window.navigator.appName === "Microsoft Internet Explorer")
         || (window.navigator.appName == "Netscape" && window.navigator.appVersion.indexOf("Edge") > -1)
         || (/Edge/.test(window.navigator.userAgent))
