@@ -1,0 +1,76 @@
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+tr:nth-child(even){
+    background: #CCC !important
+}
+
+td{
+    text-align: justify;
+    padding-right: 10%;
+    width: 20%;
+}
+
+tr td.code{
+    width: 40%;
+}
+
+#app{
+    width: 60%;
+    margin-top: 10%;
+    border: 1px solid #e6e6e6;
+    padding: 2%;
+    background: rgb(247, 244, 244);
+}
+
+#sendBtn{
+    background: #ff9419;
+    line-height: 40px;
+    height: 40px;
+    border-radius: 5px;
+    padding: 0 40px;
+    color: #FFF;
+    cursor: pointer;
+    font-size: 15px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+#countriesSelect {
+    height: 40px;
+    font-size: 16px;
+    padding: 5px 35px 5px 5px;
+}
+
+.container {
+    margin: 20%;
+}
+
+.selectArea {
+    overflow: hidden;
+}
+
+
+.loader {
+    margin: 25%;
+}
+
+div.result{
+    margin-top: 4%;
+}
+
+div.select{
+    float: left;
+}
+
+div.btn{
+    float: left;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

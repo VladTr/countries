@@ -12,25 +12,31 @@ var App = {
     button.type = "button";
     button.onclick = this.getRate.bind(this);
     button.disabled = true;
-    document.getElementsByClassName("btn")[0].appendChild(button);
+    document.querySelectorAll(".btn")[0].appendChild(button);
     this.scriptRequest("countries");
   },
 
   myFunc: function (data) {
-    if (Array.isArray(data)) {
+    var script = document.querySelectorAll("script#tmp")[0];
+    script.parentElement.removeChild(script);
+    if (data.length) {
       this.storage.countries = data;
       var selectElement = this.createSelect(this.storage.countries, this.onSelect.bind(this));
-      document.getElementsByClassName("select")[0].appendChild(selectElement);
-      document.getElementById("sendBtn").disabled = false;
+      document.querySelectorAll(".select")[0].appendChild(selectElement);
+      document.querySelectorAll("input#sendBtn")[0].disabled = false;
     } else {
+      var result = document.querySelectorAll(".result")[0];
+      if (!data.country || !data.rates.length) {
+        return result.innerHTML = "sorry";
+      }
       var table = this.generateResult({
         country: {
           name: data.country.name
         },
         rates: data.rates
       });
-      var result = document.getElementsByClassName("result")[0];
-      result.innerHTML = '';
+      
+      result.innerHTML = "";
       result.appendChild(table);
     }
 
@@ -44,34 +50,29 @@ var App = {
     url += ~url.indexOf('?') ? '&' : '?';
     url += "callback=App." + callbackName;
 
-    function checkCallback() {
-      if (scriptOk) return;
-    }
-
-    const script = document.createElement("script");
+    var script = document.createElement("script");
 
     script.onreadystatechange = function () {
       if (this.readyState == "complete" || this.readyState == "loaded") {
         this.onreadystatechange = null;
-        setTimeout(checkCallback, 0);
       }
     }
 
-    script.onload = script.onerror = checkCallback;
     script.src = url;
+    script.id = "tmp";
 
     document.body.appendChild(script);
   },
 
   createSelect: function (elements, listener) {
-    const selectList = document.createElement("select");
+    var selectList = document.createElement("select");
     selectList.id = "countriesSelect";
     selectList.onchange = listener;
 
     elements.forEach(function (element) {
-      const option = document.createElement("option");
+      var option = document.createElement("option");
       option.value = element.id;
-      option.text = element.name;
+      option.innerHTML = element.name;
       selectList.appendChild(option);
     });
 
@@ -79,22 +80,24 @@ var App = {
   },
 
   onSelect: function (event) {
-    this.storage.countryId = event.target.value;
+    var e = event || window.event;
+    var value = e.target ? e.target.value : e.srcElement.value;
+    this.storage.countryId = value;
   },
 
   getRate: function () {
-    var result = document.getElementsByClassName("result")[0];
+    var result = document.querySelectorAll(".result")[0];
     result.innerHTML = '';
     result.appendChild(this.createLoader());
     this.scriptRequest("country?id=" + this.storage.countryId);
   },
 
   generateResult: function (data) {
-    const headers = ["Country", "Type", "Code", "Rate per minute"];
-    const table = document.createElement("table");
-    const tr = document.createElement("tr");
+    var headers = ["Country", "Type", "Code", "Rate per minute"];
+    var table = document.createElement("table");
+    var tr = document.createElement("tr");
     headers.forEach(function (header) {
-      const td = document.createElement("td");
+      var td = document.createElement("td");
       td.innerText = header;
       if (header === "Code") {
         td.className = "code";
@@ -103,9 +106,9 @@ var App = {
     })
     table.appendChild(tr);
 
-    let td = null;
+    var td = null;
     data.rates.forEach(function (rate, ind) {
-      const tr = document.createElement("tr");
+      var tr = document.createElement("tr");
       td = document.createElement("td");
       if (ind === 0) {
         td.innerText = data.country.name;
@@ -122,7 +125,7 @@ var App = {
       tr.appendChild(td);
 
       td = document.createElement("td");
-      td.innerText = `$${rate.rate}`;
+      td.innerText = "$"+rate.rate;
       tr.appendChild(td);
 
       table.appendChild(tr);
@@ -132,11 +135,54 @@ var App = {
   },
 
   createLoader: function () {
-    const loader = document.createElement("div");
-    loader.className = "loader";
+    var loader = document.createElement("div");
+  
+console.log(window.navigator.userAgent, window.navigator.userAgent.indexOf("Chrome")===-1);
+
+    if (   (window.navigator.appName === "Microsoft Internet Explorer")
+        || (window.navigator.appName == "Netscape" && window.navigator.appVersion.indexOf("Edge") > -1)
+        || (/Edge/.test(window.navigator.userAgent))
+        || (/AppleWebKit/.test(window.navigator.userAgent) && (window.navigator.userAgent.indexOf("Chrome") === -1))
+        || (/Trident/.test(window.navigator.userAgent))
+    ) {
+        loader.innerHTML = "Loading ..."
+      } else {
+        loader.className = "loader";
+      }
+
     return loader;
   }
 
 };
+
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function(oThis) {
+    if (typeof this !== 'function') {
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+
+    var aArgs   = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          return fToBind.apply(this instanceof fNOP && oThis
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();  
+    return fBound;
+  };
+}
+
+if (typeof Array.prototype.forEach != 'function') {
+  Array.prototype.forEach = function(callback){
+    for (var i = 0; i < this.length; i++){
+      callback.apply(this, [this[i], i, this]);
+    }
+  };
+}
 
 App.init();

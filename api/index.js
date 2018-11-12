@@ -57,10 +57,11 @@ router.get("/country", async (req, res, next) => {
             attributes: ["areaCode", "phonePart", "type", "rate"]
         });
 
-        if (!rates.length) {
-            return res.send({
+        if (!rates.length && myFunc) {
+            res.set("Content-Type", "application/javascript; charset=utf-8");
+            return res.send(myFunc + '(' + JSON.stringify({
                 rates: []
-            });
+            }) + ')');
         }
 
         const preparedRates = [];
