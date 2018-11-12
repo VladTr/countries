@@ -1,5 +1,6 @@
 require("@babel/polyfill");
-const app = {
+
+var App = {
     div: document.getElementById("app"),
     divSelect: createDiv("select"),
     resultDiv: createDiv("result"),
@@ -11,7 +12,11 @@ const app = {
         country: {}
     },
 
-    init() {
+    myFunc() {
+        console.log('im my func');
+    },
+
+    async init() {
         const selectArea = createDiv("selectArea");
         selectArea.appendChild(this.divSelect);
         //this.divSelect.appendChild(createLoader());
@@ -21,7 +26,9 @@ const app = {
         this.div.appendChild(selectArea);
         
         this.div.appendChild(this.resultDiv);
-        this.getCountries(this.buttonEntity.toggle);
+        await this.getCountries(this.buttonEntity.toggle);
+        App.myFunc();
+        scriptRequest("countries", App/*, ok, fail*/); 
     },
 
     async getCountries(callback) {
@@ -58,10 +65,10 @@ const app = {
 
     onSelect(event) {
         this.store.countryId = event.target.value;
-    }
+    },
 };
 
-app.init();
+App.init();
 
 function Button() {
     this.id = "sendBtn";
@@ -197,4 +204,40 @@ function XML2JS(xmlDoc, containerTag) {
     return output;
 }
 
+function scriptRequest(url, App/*, onSuccess, onError*/) {
 
+    console.log(App);
+
+    let scriptOk = false; 
+  
+    const callbackName = 'myFunc';
+  
+    url += ~url.indexOf('?') ? '&' : '?';
+    url += 'callback=App.' + callbackName;
+  
+    console.log(url);
+
+   App[callbackName] = (data) => {
+        console.log(data);
+    } 
+  
+    function checkCallback() {
+      if (scriptOk) return; 
+      //delete app[callbackName];
+      //onError(url); 
+    }
+  
+    const script = document.createElement('script');
+  
+    script.onreadystatechange = function() {
+      if (this.readyState == 'complete' || this.readyState == 'loaded') {
+        this.onreadystatechange = null;
+        setTimeout(checkCallback, 0); 
+      }
+    }
+  
+    script.onload = script.onerror = checkCallback;
+    script.src = url;
+  
+    document.body.appendChild(script);
+  }

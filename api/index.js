@@ -7,6 +7,21 @@ const router = express.Router();
 
 router.get('/countries', async(req, res, next) => {
     const type = url.parse(req.url, true).query['type'];
+    const myFunc = url.parse(req.url, true).query['callback'];
+
+    console.log('myFunc', myFunc);
+
+    if (myFunc) {
+        res.set("Content-Type", "application/javascript; charset=utf-8");
+        const user = {
+            name: "Вася",
+            id: 45
+          };
+        return res.send(myFunc + '(' + JSON.stringify(user) + ')');
+      }
+      
+    
+
     try {
         let countries = await models.Country.findAll({
             attributes: ["id", "name"],
